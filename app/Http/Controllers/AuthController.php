@@ -16,11 +16,17 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        if (auth()->check()) {
+            return redirect('/'); // hoặc route('dashboard')
+        }
         return view('auth.login');
     }
 
     public function showRegister()
     {
+        if (auth()->check()) {
+            return redirect('/'); // hoặc route('dashboard')
+        }
         return view('auth.register');
     }
 
