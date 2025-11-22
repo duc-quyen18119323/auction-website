@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\ProductController; 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AdminProductController;
@@ -45,8 +45,8 @@ Route::get('/products/active', [ProductController::class, 'active'])->name('prod
 Route::get('/products/ending-soon', [ProductController::class, 'endingSoon'])->name('products.endingSoon');
 
 // Đấu giá, giao dịch
-Route::get('/bids', [BidController::class, 'index']);
-Route::get('/transactions', [TransactionController::class, 'index']);
+Route::get('/bids', [BidController::class, 'index'])->name('bids.index');
+Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
 Route::post('/products/{id}/bid', [ProductController::class, 'bid'])->name('products.bid');
 Route::post('/products/{id}/extend', [ProductController::class, 'extend'])->name('products.extend');
 Route::post('/products/{id}/confirm-sold', [ProductController::class, 'confirmSold'])->name('products.confirmSold');
@@ -139,7 +139,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Yêu thích & sản phẩm của tôi
     Route::post('/favorite', [FavoriteController::class, 'store'])->name('favorite.store');
-    Route::get('/favorites', [FavoriteController::class, 'list'])->name('favorites.list');
+    Route::get('/favorites', [FavoriteController::class, 'list'])->name('favorites.index');
     Route::delete('/favorite', [FavoriteController::class, 'destroy'])->name('favorite.destroy');
     Route::get('/my-products', [FavoriteController::class, 'myProducts'])->name('my.products');
 });
