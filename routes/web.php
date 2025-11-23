@@ -37,12 +37,13 @@ Route::get('/', function () {
 | Product routes
 |--------------------------------------------------------------------------
 */
-Route::resource('products', ProductController::class);
-
-// Filter sản phẩm
+// Filter sản phẩm - Phải đặt TRƯỚC Route::resource để tránh conflict
 Route::get('/products/featured', [ProductController::class, 'featured'])->name('products.featured');
 Route::get('/products/active', [ProductController::class, 'active'])->name('products.active');
 Route::get('/products/ending-soon', [ProductController::class, 'endingSoon'])->name('products.endingSoon');
+
+// Resource routes
+Route::resource('products', ProductController::class);
 
 // Đấu giá, giao dịch
 Route::get('/bids', [BidController::class, 'index'])->name('bids.index');

@@ -102,9 +102,14 @@ class ProductController extends Controller
     public function featured(Request $request)
     {
         $query = Product::with('images')->where('start_time', '>', now())->where('status', 'active');
+
+        if ($request->filled('q')) {
+            $query->where('name', 'like', '%' . $request->q . '%');
+        }
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
+
         $products = $query->orderBy('start_time')->get();
         $categories = Product::distinct()->pluck('category')->filter()->values();
         return view('products.index', compact('products', 'categories'));
@@ -112,10 +117,18 @@ class ProductController extends Controller
 
     public function active(Request $request)
     {
-        $query = Product::with('images')->where('start_time', '<=', now())->where('end_time', '>', now())->where('status', 'active');
+        $query = Product::with('images')
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>', now())
+            ->where('status', 'active');
+
+        if ($request->filled('q')) {
+            $query->where('name', 'like', '%' . $request->q . '%');
+        }
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
+
         $products = $query->orderBy('end_time')->get();
         $categories = Product::distinct()->pluck('category')->filter()->values();
         return view('products.index', compact('products', 'categories'));
@@ -127,9 +140,14 @@ class ProductController extends Controller
             ->where('end_time', '>', now())
             ->where('end_time', '<', now()->addDay())
             ->where('status', 'active');
+
+        if ($request->filled('q')) {
+            $query->where('name', 'like', '%' . $request->q . '%');
+        }
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
+
         $products = $query->orderBy('end_time')->get();
         $categories = Product::distinct()->pluck('category')->filter()->values();
         return view('products.index', compact('products', 'categories'));
@@ -137,21 +155,21 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $categories = Product::distinct()->pluck('category')->filter()->values();
-        if (auth()->check()) {
-            // Nếu đã đăng nhập, chỉ lấy sản phẩm của user đó (mọi trạng thái)
-            $query = Product::with('images')->where('user_id', auth()->id());
-            if ($request->filled('q')) {
-                $query->where('name', 'like', '%' . $request->q . '%');
-            }
-            if ($request->filled('category')) {
-                $query->where('category', $request->category);
-            }
-            $products = $query->orderBy('end_time', 'desc')->get();
-        } else {
-            // Nếu chưa đăng nhập, không hiển thị sản phẩm nào
-            $products = collect();
+        // Hiển thị tất cả sản phẩm đang active và chưa kết thúc đấu giá
+        $query = Product::with('images')
+            ->where('status', 'active')
+            ->where('end_time', '>', now());
+
+        if ($request->filled('q')) {
+            $query->where('name', 'like', '%' . $request->q . '%');
         }
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $products = $query->orderBy('end_time', 'desc')->get();
+        $categories = Product::distinct()->pluck('category')->filter()->values();
+
         return view('products.index', compact('products', 'categories'));
     }
 

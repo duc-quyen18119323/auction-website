@@ -58,26 +58,36 @@
     </section>
 
     <!-- Search Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div class="bg-white rounded-xl shadow-lg p-6 animate-scale-in hover-lift">
-            <form method="GET" action="{{ route('products.index') }}" class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Tìm kiếm sản phẩm..."
-                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+        <div class="bg-white rounded-xl shadow-2xl p-6 animate-scale-in hover-lift border border-gray-100">
+            <form method="GET" action="{{ route('products.index') }}" class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                <!-- Search Input -->
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text"
+                           name="q"
+                           value="{{ request('q') }}"
+                           placeholder="Tìm kiếm sản phẩm..."
+                           class="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 placeholder-gray-400">
                 </div>
-                <div class="md:w-64">
-                    <select name="category" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+
+                <!-- Category Dropdown -->
+                <div class="sm:w-56 relative">
+                    <select name="category"
+                            class="w-full px-4 py-3.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 appearance-none bg-white cursor-pointer">
                         <option value="">Tất cả danh mục</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat }}" @if(request('category') == $cat) selected @endif>{{ $cat }}</option>
                         @endforeach
                     </select>
+                    <i class="fas fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                 </div>
-                <button type="submit" class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                    <i class="fas fa-search mr-2"></i>Tìm Kiếm
+
+                <!-- Search Button -->
+                <button type="submit"
+                        class="px-8 py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2 whitespace-nowrap">
+                    <i class="fas fa-search"></i>
+                    <span>Tìm Kiếm</span>
                 </button>
             </form>
         </div>
