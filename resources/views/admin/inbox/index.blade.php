@@ -19,7 +19,7 @@
                         <!-- Nút 3 chấm -->
                         <button type="button"
                                 class="ml-2 cursor-pointer p-1 menu-trigger"
-                                onclick="toggleMenu(event, {{ $conv->id }})">
+                                data-menu-button="{{ $conv->id }}">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="w-5 h-5 text-gray-500 hover:text-gray-700"
                                  fill="none" viewBox="0 0 24 24"
@@ -32,8 +32,8 @@
                     </div>
 
                     <!-- Menu Ghim / Xóa -->
-                    <div id="menu-{{ $conv->id }}"
-                         class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10">
+                    <div class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10"
+                         data-menu="{{ $conv->id }}">
                         <form action="{{ route('admin.inbox.pin', $conv->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
@@ -66,31 +66,36 @@
 </div>
 
 <script>
-    // Hàm mở/đóng menu – gắn lên window để chắc chắn gọi được từ onclick
-    window.toggleMenu = function(event, id) {
-        event.stopPropagation();
+document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('[data-menu-button]');
+    const menus   = document.querySelectorAll('[data-menu]');
 
-        const menu = document.getElementById('menu-' + id);
+    function hideAllMenus() {
+        menus.forEach(m => m.classList.add('hidden'));
+    }
 
-        // Ẩn tất cả menu khác
-        document.querySelectorAll('.menu-dropdown').forEach(el => el.classList.add('hidden'));
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
 
-        // Toggle menu hiện tại
-        if (menu.classList.contains('hidden')) {
-            menu.classList.remove('hidden');
-        } else {
-            menu.classList.add('hidden');
-        }
-    };
+            const id   = this.getAttribute('data-menu-button');
+            const menu = document.querySelector('[data-menu="' + id + '"]');
 
-    // Click ra ngoài thì đóng menu
-    document.addEventListener('click', function(e) {
-        const isInMenu     = e.target.closest('.menu-dropdown');
-        const isInTrigger  = e.target.closest('.menu-trigger');
+            const isHidden = menu.classList.contains('hidden');
+            hideAllMenus();
+            if (isHidden) {
+                menu.classList.remove('hidden');
+            }
+        });
+    });
 
-        if (!isInMenu && !isInTrigger) {
-            document.querySelectorAll('.menu-dropdown').forEach(el => el.classList.add('hidden'));
+    document.addEventListener('click', function (e) {
+        const inMenu    = e.target.closest('[data-menu]');
+        const inTrigger = e.target.closest('[data-menu-button]');
+        if (!inMenu && !inTrigger) {
+            hideAllMenus();
         }
     });
+});
 </script>
 @endsection

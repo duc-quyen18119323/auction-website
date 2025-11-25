@@ -57,6 +57,10 @@ class AdminProfileController extends Controller
     }
 
     public static function getUnreadSupportCount() {
-        return Message::where('is_read', false)->count();
+        return \App\Models\Conversation::whereHas('messages', function ($query) {
+            $query->where('is_admin', 0)   // user gửi
+                  ->where('is_read', 0);   // admin chưa đọc
+        })
+        ->count();
     }
 }
