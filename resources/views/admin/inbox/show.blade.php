@@ -15,7 +15,9 @@
 
                 <li class="relative">
                     <a href="{{ route('admin.inbox.show', $conv->id) }}"
-                       class="block px-4 py-3 border-b hover:bg-blue-100 {{ $conv->id == $conversation->id ? 'bg-blue-50 font-bold' : '' }} flex items-center justify-between">
+                       class="block px-4 py-3 border-b hover:bg-blue-100
+                              {{ $conv->id == $conversation->id ? 'bg-blue-50 font-bold' : '' }}
+                              flex items-center justify-between">
 
                         <span class="font-semibold">
                             {{ $conv->user->username ?? 'Người dùng' }}
@@ -75,59 +77,63 @@
                 <span class="text-blue-700">{{ $conversation->user->username ?? 'Người dùng' }}</span>
             </h3>
 
+            <!-- DANH SÁCH TIN NHẮN -->
             <div class="space-y-4">
-            @foreach($conversation->messages as $msg)
-            <div class="space-y-4">
-    @foreach($conversation->messages as $msg)
+                @foreach($conversation->messages as $msg)
+                    <div class="flex {{ $msg->is_admin ? 'justify-end' : 'justify-start' }}">
+                        <div class="max-w-xs px-4 py-2 rounded-lg
+                                    {{ $msg->is_admin ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' }}">
 
-        <div class="flex {{ $msg->is_admin ? 'justify-end' : 'justify-start' }}">
-            <div class="max-w-xs px-4 py-2 rounded-lg 
-                {{ $msg->is_admin ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' }}"
-            >
+                            {{-- TEXT --}}
+                            @if($msg->message)
+                                <div class="text-sm">{{ $msg->message }}</div>
+                            @endif
 
-                {{-- TEXT --}}
-                @if($msg->message)
-                    <div class="text-sm">{{ $msg->message }}</div>
-                @endif
+                            {{-- IMAGE --}}
+                            @if($msg->image_path)
+                                <div class="mt-2">
+                                    <img src="{{ Storage::url($msg->image_path) }}"
+                                         class="rounded-lg max-w-full">
+                                </div>
+                            @endif
 
-                {{-- IMAGE --}}
-                @if($msg->image_path)
-                    <div class="mt-2">
-                        <img src="{{ Storage::url($msg->image_path) }}" 
-                             class="rounded-lg max-w-full">
+                            {{-- TIME --}}
+                            <div class="text-xs text-right opacity-70 mt-1">
+                                {{ $msg->created_at->format('H:i d/m/Y') }}
+                            </div>
+                        </div>
                     </div>
-                @endif
-
-                {{-- TIME --}}
-                <div class="text-xs text-right opacity-70 mt-1">
-                    {{ $msg->created_at->format('H:i d/m/Y') }}
-                </div>
-
+                @endforeach
             </div>
         </div>
 
-    @endforeach
-</div>
+        <!-- FORM GỬI TIN NHẮN -->
+        <form action="{{ route('admin.inbox.send', $conversation->id) }}"
+              method="POST"
+              enctype="multipart/form-data"
+              class="flex p-4 bg-gray-50 border-t">
+            @csrf
 
-@endforeach
+            <input type="file" name="image" class="mr-2" accept="image/*">
 
-            </div>
-        </div>
+            <input type="text"
+                   name="message"
+                   class="flex-1 border rounded px-3 py-2 mr-2"
+                   placeholder="Nhập tin nhắn..."
+                   autocomplete="off">
 
-        <form action="{{ route('admin.inbox.send', $conversation->id) }}" method="POST" class="flex p-4 bg-gray-50 border-t" enctype="multipart/form-data">
-    @csrf
-    <input type="file" name="image" class="mr-2" accept="image/*">
-    <input type="text" name="message" class="flex-1 border rounded px-3 py-2 mr-2" placeholder="Nhập tin nhắn..." autocomplete="off">
-    <button class="bg-blue-600 text-white px-4 py-2 rounded">Gửi</button>
-</form>
-
+            <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded">
+                Gửi
+            </button>
+        </form>
     </div>
 </div>
 
 <script>
 function toggleMenu(event, id) {
-    event.preventDefault();   // ⭐ không cho <a> điều hướng
-    event.stopPropagation();  // không bubble lên document
+    event.preventDefault();   // không cho <a> điều hướng khi bấm 3 chấm
+    event.stopPropagation();
 
     document.querySelectorAll('.menu-dropdown')
         .forEach(el => el.classList.add('hidden'));

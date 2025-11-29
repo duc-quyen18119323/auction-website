@@ -1,4 +1,20 @@
+@php
+    use App\Models\Message;
+
+    $unreadForUser = 0;
+
+    if (auth()->check()) {
+        $unreadForUser = Message::whereHas('conversation', function ($q) {
+                $q->where('user_id', auth()->id());
+            })
+            ->where('is_admin', 1)   // tin do admin gửi
+            ->where('is_read', 0)    // user chưa đọc
+            ->count();
+    }
+@endphp
+
 <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
+
 
 <div id="chat-widget-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24"
@@ -6,7 +22,12 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4.39-1.02L3 20l1.02-3.61A8.96 8.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
     </svg>
+
+    @if($unreadForUser > 0)
+        <span id="chat-unread-badge">{{ $unreadForUser }}</span>
+    @endif
 </div>
+
 
 <div id="chat-widget-box">
     {{-- HEADER --}}
@@ -51,11 +72,16 @@
     const imageEl     = document.getElementById('chat-image');
 
     chatBtn.onclick = function () {
-        chatBox.classList.toggle('active');
-        if (chatBox.classList.contains('active')) {
-            loadMessages();
-        }
-    };
+    chatBox.classList.toggle('active');
+    if (chatBox.classList.contains('active')) {
+        loadMessages();
+
+        // ẩn badge số đỏ khi người dùng mở chat
+        const badge = document.getElementById('chat-unread-badge');
+        if (badge) badge.style.display = 'none';
+    }
+};
+
 
     closeBtn.onclick = function () {
         chatBox.classList.remove('active');
