@@ -1,73 +1,95 @@
-﻿<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý sản phẩm đấu giá</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-    @include('components.header-logo')
-    <div class="max-w-5xl mx-auto mt-8 px-4">
-        <h2 class="text-2xl font-bold mb-6">Quản lý sản phẩm đấu giá</h2>
+﻿@extends('admin.dashboard')
+
+@section('title', 'Quản lý sản phẩm đấu giá')
+@section('page_title', 'Quản lý sản phẩm đấu giá')
+
+@section('content')
+
+    <link rel="stylesheet" href="{{ asset('css/admin-products.css') }}">
+
+    <div class="products-page">
+
         @if(session('success'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            <div class="products-alert-success">
                 {{ session('success') }}
             </div>
         @endif
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-            <table class="min-w-full">
+
+        <div class="products-card">
+
+            <table class="products-table">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 border-b">ID</th>
-                        <th class="py-2 px-4 border-b">Tên</th>
-                        <th class="py-2 px-4 border-b">Người tạo</th>
-                        <th class="py-2 px-4 border-b">Giá khởi điểm</th>
-                        <th class="py-2 px-4 border-b">Bước giá</th>
-                        <th class="py-2 px-4 border-b">Kết thúc</th>
-                        <th class="py-2 px-4 border-b">Trạng thái</th>
-                        <th class="py-2 px-4 border-b">Hành động</th>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Người tạo</th>
+                        <th>Giá khởi điểm</th>
+                        <th>Bước giá</th>
+                        <th>Kết thúc</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach($products as $product)
                         <tr>
-                            <td class="py-2 px-4 border-b">{{ $product->id }}</td>
-                            <td class="py-2 px-4 border-b">{{ $product->name }}</td>
-                            <td class="py-2 px-4 border-b">{{ $product->user->name ?? '---' }}</td>
-                            <td class="py-2 px-4 border-b">{{ number_format($product->starting_price, 0, ',', '.') }} VNĐ</td>
-                            <td class="py-2 px-4 border-b">{{ number_format($product->bid_step, 0, ',', '.') }} VNĐ</td>
-                            <td class="py-2 px-4 border-b">{{ date('d/m/Y H:i', strtotime($product->end_time)) }}</td>
-                            <td class="py-2 px-4 border-b">
+                            <td>{{ $product->id }}</td>
+
+                            <td>{{ $product->name }}</td>
+
+                            <td>{{ $product->user->username ?? '---' }}</td>
+
+                            <td>{{ number_format($product->starting_price, 0, ',', '.') }} VNĐ</td>
+
+                            <td>{{ number_format($product->bid_step, 0, ',', '.') }} VNĐ</td>
+
+                            <td>{{ date('d/m/Y H:i', strtotime($product->end_time)) }}</td>
+
+                            <td>
                                 @if($product->status == 'pending')
-                                    <span class="text-yellow-600">Chờ duyệt</span>
+                                    <span class="status-badge status-pending">Chờ duyệt</span>
                                 @elseif($product->status == 'active')
-                                    <span class="text-green-600">Đang hiển thị</span>
+                                    <span class="status-badge status-active">Đang hiển thị</span>
                                 @elseif($product->status == 'sold')
-                                    <span class="text-gray-600">Đã bán</span>
+                                    <span class="status-badge status-sold">Đã bán</span>
                                 @else
-                                    <span class="text-gray-600">Không xác định</span>
+                                    <span class="status-badge status-sold">Không xác định</span>
                                 @endif
                             </td>
-                            <td class="py-2 px-4 border-b">
-                                <form action="{{ url('/admin/products/' . $product->id . '/approve') }}" method="POST" class="inline">
+
+                            <td>
+                                <form action="{{ url('/admin/products/' . $product->id . '/approve') }}" method="POST"
+                                    class="inline">
                                     @csrf
-                                    <button type="submit" class="px-3 py-1 rounded bg-green-500 hover:bg-green-700 text-white" {{ $product->is_approved ? 'disabled' : '' }}>
-                                        Duyệt
-                                    </button>
+                                    @if($product->status == 'pending')
+                                        {{-- Nút duyệt khi còn chờ duyệt --}}
+                                        <button type="submit" class="btn-action btn-approve">
+                                            Duyệt
+                                        </button>
+                                    @else
+                                        {{-- Đã duyệt / đang hiển thị / đã bán --}}
+                                        <span class="approved-text">Đã duyệt</span>
+                                    @endif
+
                                 </form>
-                                <form action="{{ url('/admin/products/' . $product->id . '/delete') }}" method="POST" class="inline ml-2" onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
+
+                                <form action="{{ url('/admin/products/' . $product->id . '/delete') }}" method="POST"
+                                    class="inline ml-2" onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
                                     @csrf
-                                    <button type="submit" class="px-3 py-1 rounded bg-red-500 hover:bg-red-700 text-white">
+                                    <button type="submit" class="btn-action btn-delete">
                                         Xóa
                                     </button>
                                 </form>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
+
             </table>
         </div>
+
     </div>
-</body>
-</html>
+
+@endsection

@@ -21,7 +21,7 @@ class AdminAuthController extends Controller
         // Chỉ cho tài khoản có is_admin = 1 đăng nhập admin
         $credentials['is_admin'] = 1;
 
-        // ❗ DÙNG GUARD admin, KHÔNG DÙNG Auth::attempt()
+        //DÙNG GUARD admin, KHÔNG DÙNG Auth::attempt()
         if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             return redirect()->route('admin.dashboard');
@@ -32,7 +32,7 @@ class AdminAuthController extends Controller
 
     public function logout(Request $request)
     {
-        // ❗ Đăng xuất guard admin, không đụng guard web
+        //Đăng xuất guard admin, không đụng guard web
         Auth::guard('admin')->logout();
 
         $request->session()->invalidate();

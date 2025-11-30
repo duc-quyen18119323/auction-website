@@ -1,0 +1,178 @@
+/* ============================
+   TRANG QUẢN LÝ SẢN PHẨM ĐẤU GIÁ
+============================ */
+
+/* Toàn trang (chỉ dùng nếu file css này chỉ load cho view này) */
+body {
+    background-color: #f3f4f6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Container */
+.products-page {
+    max-width: 72rem;           /* ~ 1150px */
+    margin: 1.5rem auto 2.5rem;
+    padding: 0 1.5rem;
+}
+
+/* Tiêu đề */
+.products-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    color: #111827;
+}
+
+/* Thông báo success */
+.products-alert-success {
+    margin-bottom: 1rem;
+    background-color: #ecfdf3;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 0.7rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* Card bọc bảng */
+.products-card {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    padding: 1.75rem 1.75rem 2rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+/* Bảng */
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.products-table thead {
+    background-color: #f3f4f6;
+}
+
+.products-table th,
+.products-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;       /* căn giữa theo chiều dọc */
+    text-align: center;           /* mặc định căn giữa ngang */
+}
+
+.products-table th {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+.products-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.products-table tbody tr:hover {
+    background-color: #eff6ff;
+}
+
+/* Trạng thái (badge) */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-sold {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+/* Nút hành động */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, filter 0.1s ease-out;
+}
+
+.btn-action + .btn-action {
+    margin-left: 0.4rem;
+}
+
+/* Duyệt */
+.btn-approve {
+    background: #22c55e;
+    box-shadow: 0 6px 14px rgba(34, 197, 94, 0.4);
+}
+/* Text “Đã duyệt” thay cho nút */
+.approved-text {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;           /* xám tailwind gray-500 */
+    background: #e5e7eb;     /* gray-200 */
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.btn-approve:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+/* Xóa */
+.btn-delete {
+    background: #ef4444;
+    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.4);
+}
+
+.btn-delete:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+/* Khi nhấn */
+.btn-action:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+}
+
+/* Responsive nhẹ */
+@media (max-width: 768px) {
+    .products-card {
+        padding: 1.25rem 1.1rem 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .products-table {
+        font-size: 0.85rem;
+    }
+
+    .products-table th,
+    .products-table td {
+        padding: 0.55rem 0.6rem;
+    }
+}

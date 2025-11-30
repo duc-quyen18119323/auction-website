@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Sản Phẩm Đấu Giá</title>
+    <title>Danh Sách Sản Phẩm Đấu Giá Của Bạn</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="{{ asset('storage/products/logoweb.png') }}">
@@ -72,7 +72,7 @@
                     </div>
                     <div>
                         <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-                            Danh Sách Sản Phẩm Đấu Giá
+                            Danh Sách Sản Phẩm Đấu Giá Của Bạn
                         </h2>
                         <p class="text-gray-600">Khám phá và tham gia đấu giá các sản phẩm độc đáo</p>
                     </div>
@@ -88,41 +88,6 @@
                 </div>
             </div>
         @endif
-
-        <!-- Filter Navigation Tabs -->
-        <div class="mb-6 bg-white rounded-xl shadow-lg p-2 border border-gray-100">
-            <div class="flex flex-wrap gap-2">
-                @php
-                    $queryParams = [];
-                    if(request('q')) $queryParams['q'] = request('q');
-                    if(request('category')) $queryParams['category'] = request('category');
-                @endphp
-                <a href="{{ route('products.index', $queryParams) }}"
-                   class="flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-center flex items-center justify-center gap-2 {{ request()->routeIs('products.index') ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    <i class="fas fa-gavel"></i>
-                    <span>Tất Cả</span>
-                </a>
-                <a href="{{ route('products.featured', $queryParams) }}"
-                   class="flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-center flex items-center justify-center gap-2 {{ request()->routeIs('products.featured') ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    <i class="fas fa-clock"></i>
-                    <span class="hidden sm:inline">Sắp Diễn Ra</span>
-                    <span class="sm:hidden">Sắp Diễn Ra</span>
-                </a>
-                <a href="{{ route('products.active', $queryParams) }}"
-                   class="flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-center flex items-center justify-center gap-2 {{ request()->routeIs('products.active') ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    <i class="fas fa-fire"></i>
-                    <span class="hidden sm:inline">Đang Đấu Giá</span>
-                    <span class="sm:hidden">Đang Đấu</span>
-                </a>
-                <a href="{{ route('products.endingSoon', $queryParams) }}"
-                   class="flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-200 text-center flex items-center justify-center gap-2 {{ request()->routeIs('products.endingSoon') ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                    <i class="fas fa-hourglass-half"></i>
-                    <span class="hidden sm:inline">Sắp Kết Thúc</span>
-                    <span class="sm:hidden">Sắp Kết Thúc</span>
-                </a>
-            </div>
-        </div>
-
         <!-- Search Form -->
         <div class="bg-white rounded-xl shadow-2xl p-6 mb-8 animate-scale-in hover-lift border border-gray-100">
             <form method="GET"

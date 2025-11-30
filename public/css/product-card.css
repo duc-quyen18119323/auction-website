@@ -1,0 +1,79 @@
+/* ================================
+   PRODUCT CARD GLOBAL STYLING
+   ================================ */
+
+/* Giới hạn tên sản phẩm 2 dòng */
+.product-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;       /* chỉ hiển thị 2 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.8rem;          /* giữ chiều cao card đồng đều */
+}
+
+/* Mô tả sản phẩm, cũng giới hạn 2 dòng */
+.product-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Card hover đẹp hơn */
+.product-card {
+    transition: all 0.25s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge (trạng thái sản phẩm) luôn đẹp */
+.product-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Tên + mô tả chữ mượt */
+.product-title,
+.product-description {
+    word-break: break-word;
+}
+
+/* Nút Xem chi tiết */
+.product-btn {
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.2s ease-in-out, transform 0.2s;
+}
+
+.product-btn:hover {
+    transform: scale(1.02);
+}
+
+/* Căn đều khoảng cách trong card */
+.product-info {
+    margin-bottom: 16px;
+}
+
+/* Ẩn overflow hình ảnh khi zoom */
+.product-image-wrapper {
+    overflow: hidden;
+}
+
+.product-image-wrapper img {
+    transition: transform 0.4s ease;
+}
+
+.product-image-wrapper:hover img {
+    transform: scale(1.05);
+}

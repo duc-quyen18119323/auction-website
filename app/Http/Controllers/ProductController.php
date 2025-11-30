@@ -38,7 +38,8 @@ class ProductController extends Controller
             $images = $request->file('images');
             $count = 0;
             foreach ($images as $img) {
-                if ($count >= 6) break;
+                if ($count >= 6)
+                    break;
                 $imagePath = $img->store('products', 'public');
                 \App\Models\ProductImage::create([
                     'product_id' => $product->id,
@@ -195,7 +196,8 @@ class ProductController extends Controller
             $images = $request->file('images');
             $count = 0;
             foreach ($images as $img) {
-                if ($count >= 6) break;
+                if ($count >= 6)
+                    break;
                 $imagePath = $img->store('products', 'public');
                 \App\Models\ProductImage::create([
                     'product_id' => $product->id,
@@ -290,4 +292,27 @@ class ProductController extends Controller
         $image->delete();
         return back()->with('success', 'Đã xoá ảnh sản phẩm!');
     }
+    public function myProducts(Request $request)
+    {
+        $query = \App\Models\Product::with('images')
+            ->where('user_id', auth()->id());
+
+        if ($search = $request->q) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        if ($category = $request->category) {
+            $query->where('category', $category);
+        }
+
+        $products = $query->latest()->get();
+        $categories = \App\Models\Product::where('user_id', auth()->id())
+            ->distinct()
+            ->pluck('category')
+            ->filter()
+            ->values();
+
+        return view('my-products', compact('products', 'categories'));
+    }
+
 }

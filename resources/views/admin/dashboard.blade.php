@@ -3,51 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Điều Khiển Quản Trị</title>
+    <title>@yield('title', 'Bảng Điều Khiển Quản Trị')</title>
+
+    {{-- Tailwind --}}
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    {{-- CSS giao diện admin --}}
+    <link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-900 text-white flex flex-col py-8 px-4">
-            <div class="mb-6 flex justify-center">
-                <a href="/admin">
-                    <img src="{{ asset('storage/products/logoweb.png') }}" alt="Logo" class="h-16 w-auto hover:opacity-80 transition-opacity">
+<body class="admin-dashboard">
+
+<div class="admin-layout">
+    {{-- SIDEBAR --}}
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+            <div class="mb-4 flex justify-center">
+                <a href="{{ url('/admin') }}">
+                    <img src="{{ asset('storage/products/logoweb.png') }}"
+                         alt="Logo"
+                         class="h-16 w-auto hover:opacity-80 transition-opacity">
                 </a>
             </div>
-            <div class="mb-10">
-                <h1 class="text-2xl font-bold text-center">Quản Trị Đấu Giá</h1>
-            </div>
-            <nav class="flex-1">
-                <ul class="space-y-4">
-                    <li>
-                        <a href="/admin/products" class="block py-2 px-4 rounded hover:bg-blue-700 transition">Quản lý sản phẩm</a>
-                    </li>
-                    <li>
-                        <a href="/admin/auctions" class="block py-2 px-4 rounded hover:bg-blue-700 transition">Quản lý phiên đấu giá</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.inbox') }}" class="block py-2 px-4 rounded hover:bg-blue-700 transition">
-                            Hộp thư hỗ trợ
-                            <span class="ml-2 inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                                {{ \App\Http\Controllers\AdminProfileController::getUnreadSupportCount() }}
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/admin/profile" class="block py-2 px-4 rounded hover:bg-blue-700 transition">Thông tin cá nhân</a>
-                    </li>
-                </ul>
-            </nav>
-            <form action="{{ route('admin.logout') }}" method="POST" class="mt-10">
-                @csrf
-                <button type="submit" class="w-full py-2 px-4 bg-red-500 hover:bg-red-600 rounded text-white font-bold">Đăng xuất</button>
-            </form>
-        </aside>
-        <!-- Main Content -->
-        <main class="flex-1 p-10">
+
+            <h1 class="admin-sidebar-title text-center">
+                Quản Trị Đấu Giá
+            </h1>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="{{ url('/admin/products') }}"
+               class="admin-nav-item {{ request()->is('admin/products*') ? 'is-active' : '' }}">
+                Quản lý sản phẩm
+            </a>
+
+            <a href="{{ url('/admin/auctions') }}"
+               class="admin-nav-item {{ request()->is('admin/auctions*') ? 'is-active' : '' }}">
+                Quản lý phiên đấu giá
+            </a>
+
+            <a href="{{ route('admin.inbox') }}"
+               class="admin-nav-item {{ request()->routeIs('admin.inbox*') ? 'is-active' : '' }}">
+                Hộp thư hỗ trợ
+                <span class="admin-nav-badge">
+                    {{ \App\Http\Controllers\AdminProfileController::getUnreadSupportCount() }}
+                </span>
+            </a>
+
+            <a href="{{ url('/admin/profile') }}"
+               class="admin-nav-item {{ request()->is('admin/profile') ? 'is-active' : '' }}">
+                Thông tin cá nhân
+            </a>
+        </nav>
+
+        <form action="{{ route('admin.logout') }}" method="POST" class="mt-6">
+            @csrf
+            <button type="submit"
+                    class="w-full py-2 px-4 bg-red-500 hover:bg-red-600 rounded text-white font-bold text-sm">
+                Đăng xuất
+            </button>
+        </form>
+
+        <div class="admin-sidebar-footer">
+            © {{ date('Y') }} QBidzone
+        </div>
+    </aside>
+
+    {{-- MAIN CONTENT --}}
+    <main class="admin-main">
+        <div class="admin-main-card">
+            @hasSection('page_title')
+                <h1 class="admin-page-title">@yield('page_title')</h1>
+            @endif
+
             @yield('content')
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
+
 </body>
 </html>
