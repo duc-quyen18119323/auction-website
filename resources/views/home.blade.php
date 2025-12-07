@@ -11,40 +11,6 @@
     <link rel="stylesheet" href="{{ asset('css/animations.css') }}">
     <link rel="stylesheet" href="{{ asset('css/product-card.css') }}">
 
-    <style>
-        .product-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .gradient-overlay {
-            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
-        }
-
-        .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 5s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50">
@@ -271,10 +237,10 @@
                                 </div>
                             </div>
 
-                            {{-- Nút xem chi tiết luôn dưới cùng --}}
-                            <a href="{{ route('products.show', $product->id) }}"
-                                class="block w-full text-center mt-auto px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
-                                Xem Chi Tiết
+                            {{-- Nút xem chi tiết đặt  dưới cùng --}}
+                            <a href="{{ url('/products/' . $product->id) }}"
+                               class="block w-full text-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                                <i class="fas fa-eye mr-2"></i>Xem Chi Tiết
                             </a>
 
                         </div>
@@ -382,6 +348,9 @@
             });
         });
     </script>
+    @auth
+        @include('components.chat-widget')
+    @endauth
 </body>
 
 </html>

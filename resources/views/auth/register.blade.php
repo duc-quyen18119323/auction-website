@@ -14,6 +14,7 @@
     @include('components.header-logo')
 
     <div class="min-h-screen flex items-center justify-center py-12 px-4">
+        
         <div class="auth-card max-w-md w-full">
             <div class="auth-card-inner p-8">
 

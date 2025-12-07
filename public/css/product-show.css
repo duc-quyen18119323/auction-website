@@ -1,0 +1,225 @@
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+}
+
+.product-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+}
+
+.product-info {
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+.image-slider {
+    animation: slideInLeft 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.bid-history {
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+}
+
+.bid-form {
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: 0.4s;
+    opacity: 0;
+}
+
+.product-slide {
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.product-slide.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.product-slide:not(.active) {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.slider-btn {
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.slider-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.price-highlight {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.btn-primary {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.table-row {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.table-row:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.info-card {
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.input-field {
+    transition: all 0.3s ease;
+}
+
+.input-field:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.winner-badge {
+    animation: pulse 2s ease-in-out infinite;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.image-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+}
+
+@media (max-width: 768px) {
+    .image-slider {
+        animation-delay: 0s;
+    }
+    .product-info {
+        animation-delay: 0.1s;
+    }
+}

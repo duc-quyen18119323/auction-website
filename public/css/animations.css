@@ -74,14 +74,6 @@
     }
 }
 
-@keyframes shimmer {
-    0% {
-        background-position: -1000px 0;
-    }
-    100% {
-        background-position: 1000px 0;
-    }
-}
 
 @keyframes float {
     0%, 100% {
@@ -180,14 +172,6 @@
 .hover-glow:hover {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
-
-/* Loading Skeleton */
-.skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-}
-
 /* Smooth Scroll */
 html {
     scroll-behavior: smooth;
@@ -249,23 +233,7 @@ html {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Gradient Animation */
-.gradient-animate {
-    background-size: 200% 200%;
-    animation: gradientShift 3s ease infinite;
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
+/* Đã bỏ hiệu ứng gradient overlay và gradient-animate cho nền tím */
 
 /* Text Animation */
 .text-reveal {
@@ -349,3 +317,34 @@ html {
     transform: translateY(0);
 }
 
+.product-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.gradient-overlay {
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: 200% 200%;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}

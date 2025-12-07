@@ -18,6 +18,7 @@
                 <option value="">Tất cả</option>
                 <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Đang diễn ra</option>
                 <option value="ended"  {{ request('status')=='ended'  ? 'selected' : '' }}>Đã kết thúc</option>
+                <option value="pending"  {{ request('status')=='pending'  ? 'selected' : '' }}>Chờ duyệt</option>
             </select>
         </form>
     </div>
@@ -42,7 +43,12 @@
                     <tr>
                         <td>{{ $auction->id }}</td>
 
-                        <td>{{ $auction->name }}</td>
+                        <td>
+                                <a href="{{ route('admin.auctions.show', $auction->id) }}"
+                                    class="text-blue-600 hover:underline">
+                                    {{ $auction->name }}
+                                </a>
+                            </td>
 
                         {{-- Username người tạo --}}
                         <td>{{ $auction->user->username ?? '---' }}</td>
@@ -52,12 +58,16 @@
                         <td>{{ date('d/m/Y H:i', strtotime($auction->end_time)) }}</td>
 
                         <td>
-                            @if(now() < $auction->end_time)
-                                <span class="status-badge status-running">Đang diễn ra</span>
-                            @else
-                                <span class="status-badge status-ended">Đã kết thúc</span>
-                            @endif
-                        </td>
+                                @if($auction->status == 'pending')
+                                    <span class="status-badge status-pending">Chờ duyệt</span>
+                                @elseif($auction->status == 'active')
+                                    <span class="status-badge status-active">Đang hiển thị</span>
+                                @elseif($auction->status == 'sold')
+                                    <span class="status-badge status-sold">Đã bán</span>
+                                @else
+                                    <span class="status-badge status-unknown">Không xác định</span>
+                                @endif
+                            </td>
 
                         <td>{{ $auction->bids_count }}</td>
                     </tr>

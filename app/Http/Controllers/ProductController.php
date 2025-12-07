@@ -24,7 +24,7 @@ class ProductController extends Controller
             'warranty' => 'required|string',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:11924',
         ]);
 
         $validated['start_time'] = \Carbon\Carbon::parse($request->start_time, 'Asia/Ho_Chi_Minh')->setTimezone('UTC');

@@ -1,101 +1,78 @@
 @extends('admin.dashboard')
 @section('content')
-<div class="flex h-full">
-    <!-- Danh sách cuộc trò chuyện -->
-    <div class="w-1/3 bg-gray-100 border-r overflow-y-auto">
-        <h2 class="text-xl font-bold p-4">Hộp thư người dùng</h2>
-        <ul>
-            @foreach($conversations as $conv)
-                <li class="relative">
-                    <div class="px-4 py-3 border-b hover:bg-blue-100 flex items-center justify-between">
+    <div class="flex h-full">
+        <!-- Danh sách cuộc trò chuyện -->
+        <div class="w-1/3 bg-gray-100 border-r overflow-y-auto">
+            <h2 class="text-xl font-bold p-4">Hộp thư người dùng</h2>
+            <ul>
+                @foreach($conversations as $conv)
+                    <li class="relative">
+                        <a href="{{ route('admin.inbox.show', $conv->id) }}" class="block px-4 py-3 border-b hover:bg-blue-100
+                              flex items-center justify-between">
 
-                        <!-- Click vào tên để mở cuộc trò chuyện -->
-                        <a href="{{ route('admin.inbox.show', $conv->id) }}" class="flex-1">
                             <span class="font-semibold">
                                 {{ $conv->user->username ?? 'Người dùng' }}
                             </span>
+
+                            {{-- Badge số tin user -> admin chưa đọc --}}
+                            @if($conv->unread_user_count > 0)
+                                <span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                    {{ $conv->unread_user_count }}
+                                </span>
+                            @endif
+
+                            {{-- nút 3 chấm giữ nguyên --}}
+                            <span class="ml-2 cursor-pointer menu-trigger" onclick="toggleMenu(event, {{ $conv->id }})">
+                                ...
+                            </span>
                         </a>
 
-                        <!-- Nút 3 chấm -->
-                        <button type="button"
-                                class="ml-2 cursor-pointer p-1 menu-trigger"
-                                data-menu-button="{{ $conv->id }}">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="w-5 h-5 text-gray-500 hover:text-gray-700"
-                                 fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <circle cx="5" cy="12" r="2"/>
-                                <circle cx="12" cy="12" r="2"/>
-                                <circle cx="19" cy="12" r="2"/>
-                            </svg>
-                        </button>
-                    </div>
+                        <div class="text-xs text-gray-500 px-4 pb-2">
+                            {{ $conv->updated_at->diffForHumans() }}
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
 
-                    <!-- Menu Ghim / Xóa -->
-                    <div class="menu-dropdown hidden absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10"
-                         data-menu="{{ $conv->id }}">
-                        <form action="{{ route('admin.inbox.pin', $conv->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                                Ghim lên đầu
-                            </button>
-                        </form>
-                        <form action="{{ route('admin.inbox.delete', $conv->id) }}" method="POST"
-                              onsubmit="return confirm('Bạn chắc chắn muốn xoá đoạn chat này?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                    class="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
-                                Xoá đoạn chat
-                            </button>
-                        </form>
-                    </div>
+        </div>
 
-                    <div class="text-xs text-gray-500 px-4 pb-2">
-                        {{ $conv->updated_at->diffForHumans() }}
-                    </div>
-                </li>
-            @endforeach
-        </ul>
+        <!-- Nội dung chat -->
+        <div class="flex-1 flex items-center justify-center text-gray-400">
+            <span>Chọn một cuộc trò chuyện để xem tin nhắn</span>
+        </div>
     </div>
 
-    <!-- Nội dung chat -->
-    <div class="flex-1 flex items-center justify-center text-gray-400">
-        <span>Chọn một cuộc trò chuyện để xem tin nhắn</span>
-    </div>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('[data-menu-button]');
+            const menus = document.querySelectorAll('[data-menu]');
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const buttons = document.querySelectorAll('[data-menu-button]');
-    const menus   = document.querySelectorAll('[data-menu]');
-
-    function hideAllMenus() {
-        menus.forEach(m => m.classList.add('hidden'));
-    }
-
-    buttons.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-
-            const id   = this.getAttribute('data-menu-button');
-            const menu = document.querySelector('[data-menu="' + id + '"]');
-
-            const isHidden = menu.classList.contains('hidden');
-            hideAllMenus();
-            if (isHidden) {
-                menu.classList.remove('hidden');
+            function hideAllMenus() {
+                menus.forEach(m => m.classList.add('hidden'));
             }
-        });
-    });
 
-    document.addEventListener('click', function (e) {
-        const inMenu    = e.target.closest('[data-menu]');
-        const inTrigger = e.target.closest('[data-menu-button]');
-        if (!inMenu && !inTrigger) {
-            hideAllMenus();
-        }
-    });
-});
-</script>
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+
+                    const id = this.getAttribute('data-menu-button');
+                    const menu = document.querySelector('[data-menu="' + id + '"]');
+
+                    const isHidden = menu.classList.contains('hidden');
+                    hideAllMenus();
+                    if (isHidden) {
+                        menu.classList.remove('hidden');
+                    }
+                });
+            });
+
+            document.addEventListener('click', function (e) {
+                const inMenu = e.target.closest('[data-menu]');
+                const inTrigger = e.target.closest('[data-menu-button]');
+                if (!inMenu && !inTrigger) {
+                    hideAllMenus();
+                }
+            });
+        });
+    </script>
 @endsection

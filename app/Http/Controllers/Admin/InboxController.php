@@ -11,7 +11,14 @@ class InboxController extends Controller
     // Hiển thị danh sách cuộc trò chuyện (inbox)
     public function index()
     {
+        // Lấy tất cả cuộc trò chuyện + số tin nhắn user chưa đọc
         $conversations = Conversation::with('user')
+            ->withCount([
+                'messages as unread_user_count' => function ($q) {
+                    $q->where('is_admin', 0)  // tin do user gửi
+                      ->where('is_read', 0);   // admin chưa đọc
+                }
+            ])
             ->orderByDesc('updated_at')
             ->get();
 
@@ -21,6 +28,7 @@ class InboxController extends Controller
     // Hiển thị tin nhắn của 1 cuộc trò chuyện
     public function show($id)
     {
+        // cuộc trò chuyện đang mở + messages + user
         $conversation = Conversation::with(['messages.sender', 'user'])
             ->findOrFail($id);
 
@@ -30,7 +38,18 @@ class InboxController extends Controller
             ->where('is_read', 0)        // chưa đọc
             ->update(['is_read' => 1]);  // đánh dấu đã đọc
 
-        return view('admin.inbox.show', compact('conversation'));
+        // Lấy lại danh sách cuộc trò chuyện (bên cột trái) + số tin chưa đọc mới nhất
+        $conversations = Conversation::with('user')
+            ->withCount([
+                'messages as unread_user_count' => function ($q) {
+                    $q->where('is_admin', 0)
+                      ->where('is_read', 0);
+                }
+            ])
+            ->orderByDesc('updated_at')
+            ->get();
+
+        return view('admin.inbox.show', compact('conversation', 'conversations'));
     }
 
     // Gửi tin nhắn mới (admin gửi)
@@ -40,26 +59,27 @@ class InboxController extends Controller
             'message' => 'nullable|string',
             'image'   => 'nullable|image|max:4096'
         ]);
-    
-        $conversation = \App\Models\Conversation::findOrFail($id);
-    
+
+        $conversation = Conversation::findOrFail($id);
+
         $imagePath = null;
-    
+
         // Lưu ảnh nếu có
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('chat', 'public');
         }
-    
+
         $conversation->messages()->create([
-            'sender_id'     => auth()->id(),
-            'message'       => $request->message ?? '',  // CHO PHÉP RỖNG
-            'image_path'    => $imagePath,
-            'is_admin'      => 1,
-            'is_read'       => 0
+            'sender_id'  => auth()->id(),
+            'message'    => $request->message ?? '',
+            'image_path' => $imagePath,
+            'is_admin'   => 1,
+            'is_read'    => 0
         ]);
-    
+
+        // Cập nhật thời gian mới nhất cho đoạn chat
         $conversation->touch();
-    
+
         return redirect()->route('admin.inbox.show', $conversation->id);
     }
 

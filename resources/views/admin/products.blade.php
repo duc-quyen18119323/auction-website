@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="{{ asset('css/admin-products.css') }}">
 
     <div class="products-page">
+        {{-- Bộ lọc --}}
+    <div class="admin-filter-row mb-4">
+        <form method="GET" action="" class="admin-filter-bar">
+            <span class="admin-filter-label">Lọc theo trạng thái:</span>
+
+            <select name="status" onchange="this.form.submit()" class="admin-filter-select">
+                <option value="">Tất cả</option>
+                <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Đang diễn ra</option>
+                <option value="ended"  {{ request('status')=='ended'  ? 'selected' : '' }}>Đã kết thúc</option>
+                <option value="pending"  {{ request('status')=='pending'  ? 'selected' : '' }}>Chờ duyệt</option>
+            </select>
+        </form>
+    </div>
+
 
         @if(session('success'))
             <div class="products-alert-success">
@@ -36,7 +50,13 @@
                         <tr>
                             <td>{{ $product->id }}</td>
 
-                            <td>{{ $product->name }}</td>
+                            <td>
+                                <a href="{{ route('admin.auctions.show', $product->id) }}"
+                                    class="text-blue-600 hover:underline">
+                                    {{ $product->name }}
+                                </a>
+                            </td>
+
 
                             <td>{{ $product->user->username ?? '---' }}</td>
 

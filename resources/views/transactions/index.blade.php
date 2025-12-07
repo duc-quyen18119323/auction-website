@@ -29,19 +29,31 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($transactions as $index => $transaction)
-                                <tr class="hover:bg-blue-50 transition-all duration-300 fade-in-row" data-delay="{{ $index * 0.05 }}" style="opacity: 0;">
+                                <tr
+                                    class="hover:bg-blue-50 transition-all duration-300 fade-in-row cursor-pointer"
+                                    data-delay="{{ $index * 0.05 }}"
+                                    style="opacity: 0;"
+                                    onclick="window.location='{{ route('transactions.show', $transaction->id) }}'"
+                                >
+                                <td class="px-6 py-4 whitespace-nowrap">
+    @if($transaction->product)
+        <div class="flex items-center">
+            <i class="fas fa-box text-gray-400 mr-2"></i>
+            <span class="font-medium text-gray-900">
+                {{ \Illuminate\Support\Str::limit($transaction->product->name, 30, '...') }}
+            </span>
+        </div>
+    @else
+        <span class="text-gray-400 italic">
+            <i class="fas fa-trash mr-2"></i>[Sản phẩm đã xóa]
+        </span>
+    @endif
+</td>
+
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($transaction->product)
-                                            <div class="flex items-center">
-                                                <i class="fas fa-box text-gray-400 mr-2"></i>
-                                                <span class="font-medium text-gray-900">{{ $transaction->product->name }}</span>
-                                            </div>
-                                        @else
-                                            <span class="text-gray-400 italic"><i class="fas fa-trash mr-2"></i>[Sản phẩm đã xóa]</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="text-lg font-bold text-blue-600">{{ number_format($transaction->amount, 0, ',', '.') }} VNĐ</span>
+                                        <span class="text-lg font-bold text-blue-600">
+                                            {{ number_format($transaction->amount, 0, ',', '.') }} VNĐ
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($transaction->status === 'sold')
@@ -55,7 +67,8 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <i class="far fa-clock mr-2"></i>{{ date('d/m/Y H:i', strtotime($transaction->created_at)) }}
+                                        <i class="far fa-clock mr-2"></i>
+                                        {{ date('d/m/Y H:i', strtotime($transaction->created_at)) }}
                                     </td>
                                 </tr>
                             @endforeach

@@ -24,7 +24,7 @@ class AdminAuthController extends Controller
         //DÙNG GUARD admin, KHÔNG DÙNG Auth::attempt()
         if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.auctions');
         }
 
         return back()->with('error', 'Tài khoản hoặc mật khẩu không đúng, hoặc bạn không có quyền truy cập.');

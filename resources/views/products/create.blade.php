@@ -97,7 +97,8 @@
                             <p class="text-gray-600 font-medium">Click để chọn ảnh hoặc kéo thả vào đây</p>
                             <p class="text-sm text-gray-400 mt-1">PNG, JPG, GIF tối đa 2MB</p>
                         </label>
-                        <div id="image-preview" class="mt-4 gap-4" style="display: none; grid-template-columns: repeat(3, minmax(0, 1fr));"></div>
+                        <div id="image-preview" class="mt-4 grid grid-cols-3 gap-4 hidden"></div>
+
                     </div>
                 </div>
 
@@ -240,31 +241,40 @@
     </div>
 
     <script>
-        function updateImagePreview(input) {
-            const preview = document.getElementById('image-preview');
-            preview.innerHTML = '';
+         function updateImagePreview(input) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
 
-            if (input.files && input.files.length > 0) {
-                preview.classList.remove('hidden');
-                Array.from(input.files).forEach((file, index) => {
-                    if (index >= 6) return; // Limit to 6 images
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const div = document.createElement('div');
-                        div.className = 'relative';
-                        div.innerHTML = `
-                            <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg border-2 border-gray-200">
-                            <span class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer" onclick="removeImage(this)">×</span>
-                        `;
-                        preview.appendChild(div);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            } else {
-                preview.classList.add('hidden');
-            }
+        if (input.files && input.files.length > 0) {
+            // Bỏ ẩn khung preview
+            preview.classList.remove('hidden');
+
+            Array.from(input.files).forEach((file, index) => {
+                if (index >= 6) return; // Giới hạn 6 ảnh
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative';
+
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg border-2 border-gray-200">
+                        <span class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer" onclick="removeImage(this)">×</span>
+                        <p class="mt-1 text-xs text-gray-600 truncate" title="${file.name}">${file.name}</p>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            // Không có file → ẩn khung preview
+            preview.classList.add('hidden');
         }
+    }
 
+    function removeImage(element) {
+        element.parentElement.remove();
+    }
         function removeImage(element) {
             element.parentElement.remove();
         }

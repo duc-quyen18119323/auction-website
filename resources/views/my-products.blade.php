@@ -187,9 +187,9 @@
                             </div>
 
                             {{-- Nút xem chi tiết luôn dưới cùng --}}
-                            <a href="{{ route('products.show', $product->id) }}"
-                                class="block w-full text-center mt-auto px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
-                                Xem Chi Tiết
+                            <a href="{{ url('/products/' . $product->id) }}"
+                               class="block w-full text-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                                <i class="fas fa-eye mr-2"></i>Xem Chi Tiết
                             </a>
 
                         </div>
